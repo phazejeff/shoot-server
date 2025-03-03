@@ -17,10 +17,13 @@ func _on_player_connected(id: int) -> void:
 	players[id] = {}
 
 @rpc("any_peer")
-func server_update_player_position(id: int, position: Vector2) -> void:
+func server_update_player_position(id: int, position: Vector2, head_rotation: float, body_rotation: float) -> void:
 	if id in players:
+		# TODO: make this an object
 		players[id]["position"] = position
-		print("Updated player " + str(id) + " position to " + str(position))
+		players[id]["head_rotation"] = head_rotation
+		players[id]["body_rotation"] = body_rotation
+		print("Updated player " + str(id) + " position to " + str(position) + " and head rotation to " + str(head_rotation) + " and set body rotation to " + str(body_rotation))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
