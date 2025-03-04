@@ -1,4 +1,6 @@
 extends Node
+var PlayerActor = load("res://Actors/PlayerActor.gd")
+var Utils = load("res://utils/Utils.gd")
 
 const PORT = 32169
 
@@ -14,17 +16,21 @@ func _ready() -> void:
 
 func _on_player_connected(id: int) -> void:
 	print("Client " + str(id) + " connected!")
-	players[id] = {}
+	players[id] = PlayerActor.new(id)
 
 @rpc("any_peer")
 func server_update_player_position(id: int, position: Vector2, head_rotation: float, body_rotation: float) -> void:
 	if id in players:
 		# TODO: make this an object
-		players[id]["position"] = position
-		players[id]["head_rotation"] = head_rotation
-		players[id]["body_rotation"] = body_rotation
+		players[id].position = position
+		players[id].head_rotation = head_rotation
+		players[id].body_rotation = body_rotation
 		print("Updated player " + str(id) + " position to " + str(position) + " and head rotation to " + str(head_rotation) + " and set body rotation to " + str(body_rotation))
+	
+	for player in players.values():
+		if id != player.peer_id:
+			rpc_id(id, "client_update_player_position", Utils.obj_to_dict(player))
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+# Client rpc template
+@rpc
+func client_update_player_position(_player: Dictionary): pass
