@@ -25,7 +25,6 @@ func server_update_player_position(id: int, position: Vector2, head_rotation: fl
 		players[id].position = position
 		players[id].head_rotation = head_rotation
 		players[id].body_rotation = body_rotation
-		print("Updated player " + str(id) + " position to " + str(position) + " and head rotation to " + str(head_rotation) + " and set body rotation to " + str(body_rotation))
 	
 	for player in players.values():
 		if id != player.peer_id:
